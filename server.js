@@ -8,7 +8,7 @@ const app = express();
 const productRouter = require('./router');
 
 
-mongoose.connect('mongodb://localhost:27017', {
+mongoose.connect('mongodb://localhost:27017/product', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(result => {

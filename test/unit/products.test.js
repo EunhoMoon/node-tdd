@@ -1,10 +1,7 @@
-describe("Calculation", () => {
-    test('two plus two is four', () => {
-        expect(2 + 2).toBe(4);
-    });
+const productController = require('../../controller/products');
 
-    test('two plus two is not five', () => {
-        expect(2 + 2).not.toBe(5);
+describe('Product Controller Create', () => {
+    it('Product 객체 생성은 함수여야 한다.', () => {
+        expect(typeof productController.createProduct).toBe('function');
     });
 });
-

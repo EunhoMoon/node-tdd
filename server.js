@@ -1,17 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
-const PORT = 3000;
+require('dotenv').config();
 
 const app = express();
 
 const productRouter = require('./router');
 
-
-mongoose.connect('mongodb://localhost:27017/product', {
+mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
-}).then(result => {
+}).then(() => {
     console.log('mongodb connected');
 }).catch(error => {
     console.log(error);
@@ -21,5 +19,5 @@ app.use(express.json());
 
 app.use('/', productRouter);
 
-app.listen(PORT);
-console.log(`Running on port ${PORT} 🐸`);
+app.listen(process.env.PORT);
+console.log(`Running on port ${process.env.PORT} 🐸`);

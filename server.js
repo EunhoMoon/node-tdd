@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URL, {
 
 app.use(express.json());
 
-app.use('/', productRouter);
+app.use('/api/products', productRouter);
 
 app.listen(process.env.PORT);
 console.log(`Running on port ${process.env.PORT} 🐸`);

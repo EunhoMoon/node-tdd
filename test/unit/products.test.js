@@ -10,7 +10,7 @@ let req, res, next;
 beforeEach(() => {
     req = httpMocks.createRequest();
     res = httpMocks.createResponse();
-    next = null;
+    next = jest.fn();
 })
 
 describe('Product Controller Create', () => {
@@ -34,5 +34,14 @@ describe('Product Controller Create', () => {
         productModel.create.mockReturnValue(newProduct);
         await productController.createProduct(req, res, next);
         expect(res._getJSONData()).toStrictEqual(newProduct);
+    });
+    it('에러 처리', async () => {
+        // mocking
+        const errorMessage = { message: 'description 항복은 필수값입니다.' };
+        const rejectedPromise = Promise.reject(errorMessage);
+
+        productModel.create.mockReturnValue(rejectedPromise);
+        await productController.createProduct(req, res, next);
+        expect(next).toBeCalledWith(errorMessage);
     });
 });

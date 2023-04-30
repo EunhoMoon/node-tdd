@@ -19,6 +19,10 @@ app.use(express.json());
 
 app.use('/api/products', productRouter);
 
+app.use((err, req, res, next) => {
+    res.status(500).json({message: err.message})
+});
+
 app.listen(process.env.PORT);
 console.log(`Running on port ${process.env.PORT} 🐸`);
 

@@ -19,6 +19,7 @@ it('POST /api/products 요청시 에러는 500에러 발생', async () => {
         .send({name: "description 누락"});
 
     expect(response.statusCode).toBe(500);
-    console.log('response.body', response.body);
-    expect(response.body).toStrictEqual({})
+    expect(response.body).toStrictEqual({
+        message: "Product validation failed: description: Path `description` is required."
+    });
 });

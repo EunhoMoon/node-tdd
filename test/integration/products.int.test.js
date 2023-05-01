@@ -31,3 +31,16 @@ it('GET /api/products', async () => {
     expect(response.body[0].name).toBeDefined();
     expect(response.body[0].description).toBeDefined();
 });
+
+it('GET /api/products/:productId', async () => {
+    const productId = '644e5c40cc992ac42aef3d1d';
+    const response = await request(app).get(`/api/products/${productId}`);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe('Jacket');
+    expect(response.body.description).toBe('very good');
+});
+
+it('GET id dosent exist /api/products/:productId', async () => {
+    const response = await request(app).get('/api/products/644e5c40cc992ac42aef3222');
+    expect(response.statusCode).toBe(404);
+});

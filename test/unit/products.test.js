@@ -67,4 +67,12 @@ describe('Product Controller Get', () => {
         await productController.getProducts(req, res, next);
         expect(res._getJSONData()).toStrictEqual(allProducts);
     });
+    it('에러 처리 ', async () => {
+        const errorMessage = { message: '상품 데이터를 찾을 수 없습니다.' };
+        const rejectedPromise = Promise.reject(errorMessage);
+
+        productModel.find.mockReturnValue(rejectedPromise);
+        await productController.getProducts(req, res, next);
+        expect(next).toBeCalledWith(errorMessage);
+    });
 });

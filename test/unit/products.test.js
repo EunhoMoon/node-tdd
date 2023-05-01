@@ -69,7 +69,7 @@ describe('Product Controller Get', () => {
         await productController.getProducts(req, res, next);
         expect(res._getJSONData()).toStrictEqual(allProducts);
     });
-    it('에러 처리 ', async () => {
+    it('에러 처리', async () => {
         const errorMessage = { message: '상품 데이터를 찾을 수 없습니다.' };
         const rejectedPromise = Promise.reject(errorMessage);
 
@@ -80,12 +80,32 @@ describe('Product Controller Get', () => {
 });
 
 describe('Product Controller GetById', () => {
-    it('productController.getProductById 호출시 type은 함수여야 한다.',  () => {
+    it('productController.getProductById 호출시 그 type은 함수여야 한다.',  () => {
         expect(typeof productController.getProductById).toBe('function');
     });
-    it('should ', async () => {
+    it('productController.getProductById 호출시 productId 필요', async () => {
         req.params.productId = productId;
         await productController.getProductById(req, res, next);
         expect(productModel.findById).toBeCalledWith(productId);
+    });
+    it('성공시 json 객체와 함께 상태코드 200을 리턴', async () => {
+        productModel.findById.mockReturnValue(newProduct);
+        await productController.getProductById(req, res, next);
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(newProduct);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+    it('id에 맞는 데이터가 없을 경우 404 에러 발생', async () => {
+        productModel.findById.mockReturnValue(null);
+        await productController.getProductById(req, res, next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+    it('에러 처리', async () => {
+        const errorMessage = {message: 'error'}
+        const rejectedPromise = Promise.reject(errorMessage);
+        productModel.findById.mockReturnValue(rejectedPromise);
+        await productController.getProductById(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage);
     });
 });

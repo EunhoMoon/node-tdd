@@ -60,3 +60,16 @@ it('PUT id dosent exist /api/products/:productId', async () => {
     const response = await request(app).put('/api/products/644e5c40cc992ac42aef3222');
     expect(response.statusCode).toBe(404);
 });
+
+it('DELETE /api/products/:productId', async () => {
+    const productId = '644e5c40cc992ac42aef3d1d';
+    const response = await request(app)
+        .delete(`/api/products/${productId}`)
+        .send();
+    expect(response.statusCode).toBe(200);
+});
+
+it('DELETE id dosent exist /api/products/:productId', async () => {
+    const response = await request(app).delete('/api/products/644e5c40cc992ac42aef3222');
+    expect(response.statusCode).toBe(404);
+});

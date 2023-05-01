@@ -44,3 +44,19 @@ it('GET id dosent exist /api/products/:productId', async () => {
     const response = await request(app).get('/api/products/644e5c40cc992ac42aef3222');
     expect(response.statusCode).toBe(404);
 });
+
+it('PUT /api/products', async () => {
+    const productId = '644e5c40cc992ac42aef3d1d';
+    const response = await request(app).put(`/api/products/${productId}`)
+        .send({
+            name: 'updated name', description: 'updated description'
+        });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe('updated name');
+    expect(response.body.description).toBe('updated description');
+});
+
+it('PUT id dosent exist /api/products/:productId', async () => {
+    const response = await request(app).put('/api/products/644e5c40cc992ac42aef3222');
+    expect(response.statusCode).toBe(404);
+});

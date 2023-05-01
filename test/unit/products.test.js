@@ -7,7 +7,9 @@ const allProducts = require('../data/all-products.json');
 
 productModel.create = jest.fn();
 productModel.find = jest.fn();
+productModel.findById = jest.fn();
 
+const productId = '644e5c40cc992ac42aef3d1d';
 let req, res, next;
 
 beforeEach(() => {
@@ -74,5 +76,16 @@ describe('Product Controller Get', () => {
         productModel.find.mockReturnValue(rejectedPromise);
         await productController.getProducts(req, res, next);
         expect(next).toBeCalledWith(errorMessage);
+    });
+});
+
+describe('Product Controller GetById', () => {
+    it('productController.getProductById 호출시 type은 함수여야 한다.',  () => {
+        expect(typeof productController.getProductById).toBe('function');
+    });
+    it('should ', async () => {
+        req.params.productId = productId;
+        await productController.getProductById(req, res, next);
+        expect(productModel.findById).toBeCalledWith(productId);
     });
 });

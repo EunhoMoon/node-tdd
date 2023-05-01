@@ -17,3 +17,11 @@ exports.getProducts = async (req, res, next) => {
         next(error);
     }
 };
+
+exports.getProductById = async (req, res, next) => {
+    try {
+        await productModel.findById(req.params.productId);
+    } catch (error) {
+        next(error);
+    }
+}

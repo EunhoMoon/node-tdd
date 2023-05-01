@@ -9,6 +9,7 @@ productModel.create = jest.fn();
 productModel.find = jest.fn();
 productModel.findById = jest.fn();
 productModel.findByIdAndUpdate = jest.fn();
+productModel.findByIdAndDelete = jest.fn();
 
 const productId = '644e5c40cc992ac42aef3d1d';
 const updatedProduct = {name: 'updated name', description: 'updated description'};
@@ -147,6 +148,38 @@ describe('Product Controller Update', () => {
         const rejectedPromise = Promise.reject(errorMessage);
         productModel.findByIdAndUpdate.mockReturnValue(rejectedPromise);
         await productController.updateProduct(req, res, next);
+        expect(next).toHaveBeenCalledWith(errorMessage);
+    });
+});
+
+describe('Product Controller Delete', () => {
+    it('should have a deleteProduct function', () => {
+        expect(typeof productController.deleteProduct).toBe('function');
+    });
+    it('should call ProductModel.findByIdAndDelete', async () => {
+        req.params.productId = productId;
+        await productController.deleteProduct(req, res, next);
+        expect(productModel.findByIdAndDelete).toBeCalledWith(productId);
+    });
+    it('should return 200 response', async () => {
+        const deletedProduct = {name: 'deleted product', description: 'it is deleted'}
+        productModel.findByIdAndDelete.mockReturnValue(deletedProduct);
+        await productController.deleteProduct(req, res, next);
+        expect(res.statusCode).toBe(200);
+        expect(res._getJSONData()).toStrictEqual(deletedProduct);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+    it('id에 맞는 데이터가 없을 경우 404 에러 발생', async () => {
+        productModel.findByIdAndDelete.mockReturnValue(null);
+        await productController.deleteProduct(req, res, next);
+        expect(res.statusCode).toBe(404);
+        expect(res._isEndCalled()).toBeTruthy();
+    });
+    it('에러 처리', async () => {
+        const errorMessage = {message: 'error'};
+        const rejectedPromise = Promise.reject(errorMessage);
+        productModel.findByIdAndDelete.mockReturnValue(rejectedPromise);
+        await productController.deleteProduct(req, res, next);
         expect(next).toHaveBeenCalledWith(errorMessage);
     });
 });
